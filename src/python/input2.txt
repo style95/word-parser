@@ -1,0 +1,11 @@
+reserve=(1) set aside, allocate, allot, appoint, apportion, assign 따로 떼어놓다, 할당하다
+reserve=(2) keep, conserve, have, hold, maintain, possess, preserve, retain, save, store 갖다, 보유하다
+rival=(1) compete from , contest, contend, match ~와 경쟁하다
+rival=(2) opponent, competitor, enemy, foe, match 맞수, 적, 상대방
+crown=(1) royalty, ruler, monarch 왕위, 왕권
+crown=(2) raise  왕관을 씌우다, 왕위에 앉히다, 왕좌에 올리다
+crown=(3) cover 덮다, 씌우다
+outrageous=(1) shocking, terrible, atrocious, offensive, cruel, savage,  난폭한,지나친,엉뚱한,엄청난
+outrageous=(2) unreasonable, unfair, preposterous 말도 안되는, 터무니없는
+consequence=(1) result, outcome, product 결과
+consequence=(2) effect, influence,impact 영향력
