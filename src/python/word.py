@@ -35,13 +35,17 @@ def generate_output(input_path, file_name):
         number = re.search(r'\([1-9]\)', line, re.M | re.I)
         if not number:
             english = get_english(line)
+            english = english.strip()
+            if english[len(english)-1] is ",":
+                english = english[:len(english)-1]
             korean = get_korean(line)
             words = english.split('=')
             keyword = words[0]
             answer = words[1]
-            words = words[1].split(', ')
+            words = words[1].split(',')
             str_sum = ""
             for word in words:
+                word = word.strip()
                 str_sum = str_sum + word[0] + ", "
             str_sum = str_sum[:len(str_sum) - 2] + ";"
             first_line = keyword + " = " + str_sum
@@ -74,9 +78,10 @@ def generate_output(input_path, file_name):
                 english = get_english(line)
                 words = english.split('=(' + str(num) + ') ')
                 answer = words[1]
-                words = words[1].split(', ')
+                words = words[1].split(',')
                 str_sum = ""
                 for word in words:
+                    word = word.strip()
                     str_sum = str_sum + word[0] + ", "
                 str_sum = str_sum[:len(str_sum) - 2]
                 first_line = first_line + " (" + str(num) + ") " + str_sum
