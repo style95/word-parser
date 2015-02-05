@@ -14,19 +14,6 @@ accessTokenSecret = ""
 requestToken = ""
 requestTokenSecret = ""
 
-
-def setConsumerCreds(ckey, csecret):
-    global consumerKey
-    global consumerSecret
-    consumerKey = ckey
-    consumerSecret = csecret
-
-def set_access_token(key, secret):
-    global accessToken
-    global accessTokenSecret
-    accessToken = key
-    accessTokenSecret = secret
-
 def _get_base_string(resourceUrl, values, method="POST"):
     # In the format METHOD&encoded(resource)&parameter=value&parameter=value&...
     baseString = method + "&" + url_encode(resourceUrl) + "&"
@@ -65,10 +52,6 @@ def _get_signature(signingKey, stringToHash):
     hmacAlg = hmac.HMAC(signingKey, stringToHash, hashlib.sha1)
     return base64.b64encode(hmacAlg.digest())
 
-def url_encode(data):
-    return urllib.quote(data, "")
-
-
 def _build_oauth_headers(parameters):
     header = "OAuth "
     sortedKeys = sorted(parameters.keys()) #although not necessary
@@ -77,13 +60,24 @@ def _build_oauth_headers(parameters):
         if i < len(sortedKeys) - 1:
             header = header + ","
     return header
+def url_encode(data):
+    return urllib.quote(data, "")
 
+def setConsumerCreds(ckey, csecret):
+    global consumerKey
+    global consumerSecret
+    consumerKey = ckey
+    consumerSecret = csecret
 
-setConsumerCreds('fjxyiVp84HPSt512Bcdd','yaWYOUX48e')
-
+def set_access_token(key, secret):
+    global accessToken
+    global accessTokenSecret
+    accessToken = key
+    accessTokenSecret = secret
 
 def get_authorization_url(resourceUrl, endpointUrl, callbackUrl):
     oauthParameters = {}
+    oauthParameters["mode"] = "req_req_token"
     _add_oauth_parameters(oauthParameters, False)
     oauthParameters["oauth_callback"] = callbackUrl
 
@@ -109,6 +103,8 @@ def get_authorization_url(resourceUrl, endpointUrl, callbackUrl):
                 requestToken = s.split('=')[1]
     return endpointUrl + "?oauth_token=" + requestToken
 
+curl -X GET 'https://nid.naver.com/naver.oauth' -H 'Authorization: OAuth oauth_version="1.0",oauth_timestamp=1423091492,oauth_nonce=84587588,oauth_signature_method="HMAC-SHA1",oauth_consumer_key="fjxyiVp84HPSt512Bcdd",oauth_signature="DShMJAP39QXGfxnqMFqRcpzD2yI="'
+
 def get_access_token(resourceUrl, requestTok, requestTokSecret, oauth_verifier):
     global requestToken
     global requestTokenSecret
@@ -117,6 +113,7 @@ def get_access_token(resourceUrl, requestTok, requestTokSecret, oauth_verifier):
     requestToken = requestTok
     requestTokenSecret = requestTokSecret
     oauthParameters = {"oauth_verifier" : oauth_verifier, "oauth_token" : requestToken}
+    oauthParameters["mode"] = "req_acc_token"
     _add_oauth_parameters(oauthParameters, False)
     baseString = _get_base_string(resourceUrl, oauthParameters)
 
@@ -137,6 +134,7 @@ def get_access_token(resourceUrl, requestTok, requestTokSecret, oauth_verifier):
 
 def get_api_response(resourceUrl, method = "POST", parameters = {}):
     _add_oauth_parameters(parameters)
+    parameters["mode"] = "auth_req_token"
     baseString = _get_base_string(resourceUrl, parameters, method)
     signingKey = consumerSecret + "&" + accessTokenSecret
     parameters["oauth_signature"] = _get_signature(signingKey, baseString)
@@ -151,3 +149,5 @@ def get_api_response(resourceUrl, method = "POST", parameters = {}):
     httpResponse = urllib2.urlopen(httpRequest)
     respStr = httpResponse.read()
 
+setConsumerCreds('fjxyiVp84HPSt512Bcdd','yaWYOUX48e')
+get_authorization_url("https://nid.naver.com/naver.oauth","https://helloworld.com/", "https://helloworld.com/")
