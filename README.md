@@ -10,7 +10,7 @@ In the absence of SQL-like query engine for streams and the lack of fundamental 
 
 StreamSQLContext is the main entry point for all streaming sql related functionalities. StreamSQLContext can be created by:
 
-```
+```scala
 val ssc: StreamingContext
 val sqlContext: SQLContext
     
