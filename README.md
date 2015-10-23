@@ -85,7 +85,7 @@ sql(
       """.stripMargin)
 ```
 
-Note: For time-based windowing join, the window size and sliding size should be same for all the joined streams. This is the limitation of Spark Streaming.
+Note: For time-based windowing join, the sliding size should be same for all the joined streams. This is the limitation of Spark Streaming.
 
 ###External Source API Support for Kafka
 
@@ -106,14 +106,14 @@ streamSqlContext.command(
 
 ###How to Build and Deploy
 
-Spark-CEP is built with sbt, you could use sbt related commands to test/compile/package.
+Spark CEP is built with sbt, you could use sbt related commands to test/compile/package.
 
-Spark-CEP is built on >= Spark-1.5, you could change the Spark version in Build.scala to the version you wanted, currently Spark-CEP can be worked with Spark version 1.5+.
+Spark CEP is built on >= Spark-1.5, you could change the Spark version in Build.scala to the version you wanted, currently Spark CEP can be worked with Spark version 1.5+.
 
-To use Spark-CEP, put the packaged jar into your environment where Spark could access, you could use spark-submit --jars or other ways.
+To use Spark CEP, put the packaged jar into your environment where Spark could access, you could use spark-submit --jars or other ways.
 
 
-####Spark-CEP job submission sample
+####Spark CEP job submission sample
 
 ```bash
 {$SPARK_HOME}/bin/spark-submit \
@@ -138,7 +138,9 @@ To use Spark-CEP, put the packaged jar into your environment where Spark could a
     SELECT COUNT(DISTINCT t.duid) FROM stream_test OVER (WINDOW '300' SECONDS, SLIDE '5' SECONDS) AS t
 ```
 
-There are few arguments being passed to the Spark-CEP job.
+There are few arguments being passed to the Spark CEP job.
 First, it requires zookeeper url(`kafka.zookeeper.quorum`) for consuming stream from Kafka.
 Since it stores the result within a window to redis, it also requires Redis connection information.
 You can pass continuous query against a Kafka topic(`stream_test`).
+
+If you want to contribute our project, please refer to [Governance](https://github.com/samsung/spark-cep/wiki/Governance)
