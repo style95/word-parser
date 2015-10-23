@@ -32,7 +32,7 @@ val streamSqlContext = new StreamSQLContext(ssc, hiveContext)
 case class Person(name: String, age: String)
 
 // Create an DStream of Person objects and register it as a stream.
-val people: DStream[Person] = ssc.socketTextStream(serverIP, serverPort)
+val people: DStream[Person] = ssc.socketTe(serverIP, serverPort)
   .map(_.split(","))
   .map(p => Person(p(0), p(1).toInt))
     
@@ -144,3 +144,6 @@ Since it stores the result within a window to redis, it also requires Redis conn
 You can pass continuous query against a Kafka topic(`stream_test`).
 
 If you want to contribute our project, please refer to [Governance](https://github.com/samsung/spark-cep/wiki/Governance)
+___
+Contact: [Robert B. Kim](byungjin.kim@samsung.com) [Junseok Heo](jun.seok.heo@samsung.com)
+___
