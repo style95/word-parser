@@ -19,80 +19,90 @@ val streamSqlContext = new StreamSQLContext(ssc, sqlContext)
 
 Or you could use HiveContext to get full Hive semantics support, like:
     
-    val ssc: StreamingContext
-    val hiveContext: HiveContext
+```scala
+val ssc: StreamingContext
+val hiveContext: HiveContext
 
-    val streamSqlContext = new StreamSQLContext(ssc, hiveContext)
+val streamSqlContext = new StreamSQLContext(ssc, hiveContext)
+```
 
 ###Running SQL on DStreams
     
-    case class Person(name: String, age: String)
+```scala
+case class Person(name: String, age: String)
 
-    // Create an DStream of Person objects and register it as a stream.
-    val people: DStream[Person] = ssc.socketTextStream(serverIP, serverPort)
-      .map(_.split(","))
-      .map(p => Person(p(0), p(1).toInt))
+// Create an DStream of Person objects and register it as a stream.
+val people: DStream[Person] = ssc.socketTextStream(serverIP, serverPort)
+  .map(_.split(","))
+  .map(p => Person(p(0), p(1).toInt))
     
-    val schemaPeopleStream = streamSqlContext.createSchemaDStream(people)
-    schemaPeopleStream.registerAsTable("people")
+val schemaPeopleStream = streamSqlContext.createSchemaDStream(people)
+schemaPeopleStream.registerAsTable("people")
     
-    val teenagers = sql("SELECT name FROM people WHERE age >= 10 && age <= 19")
+val teenagers = sql("SELECT name FROM people WHERE age >= 10 && age <= 19")
     
-    // The results of SQL queries are themselves DStreams and support all the normal operations
-    teenagers.map(t => "Name: " + t(0)).print()
-    ssc.start()
-    ssc.awaitTerminationOrTimeout(30 * 1000)
-    ssc.stop()
+// The results of SQL queries are themselves DStreams and support all the normal operations
+teenagers.map(t => "Name: " + t(0)).print()
+ssc.start()
+ssc.awaitTerminationOrTimeout(30 * 1000)
+ssc.stop()
+```
 
 ###Stream Relation Join
+
+```scala    
+val userStream: DStream[User]
+streamSqlContext.registerDStreamAsTable(userStream, "user")
     
-    val userStream: DStream[User]
-    streamSqlContext.registerDStreamAsTable(userStream, "user")
+val itemStream: DStream[Item]
+streamSqlContext.registerDStreamAsTable(itemStream, "item")
     
-    val itemStream: DStream[Item]
-    streamSqlContext.registerDStreamAsTable(itemStream, "item")
+sql("SELECT * FROM user JOIN item ON user.id = item.id").print()
     
-    sql("SELECT * FROM user JOIN item ON user.id = item.id").print()
-    
-    val historyItem: DataFrame
-    historyItem.registerTempTable("history")
-    sql("SELECT * FROM user JOIN item ON user.id = history.id").print()
+val historyItem: DataFrame
+historyItem.registerTempTable("history")
+sql("SELECT * FROM user JOIN item ON user.id = history.id").print()
+```
 
 ###Time Based Windowing Join/Aggregation
 
-    sql(
-      """
-        |SELECT t.word, COUNT(t.word)
-        |FROM (SELECT * FROM test) OVER (WINDOW '9' SECONDS, SLIDE '3' SECONDS) AS t
-        |GROUP BY t.word
-      """.stripMargin)
-    
-    sql(
-      """
-        |SELECT * FROM
-        |  user1 OVER (WINDOW '9' SECONDS, SLIDE '6' SECONDS) AS u
-        |JOIN
-        |  user2 OVER (WINDOW '9' SECONDS, SLIDE '6' SECONDS) AS v
+```scala
+sql(
+  """
+    |SELECT t.word, COUNT(t.word)
+    |FROM (SELECT * FROM test) OVER (WINDOW '9' SECONDS, SLIDE '3' SECONDS) AS t
+    |GROUP BY t.word
+  """.stripMargin)
+
+sql(
+  """
+    |SELECT * FROM
+    |  user1 OVER (WINDOW '9' SECONDS, SLIDE '6' SECONDS) AS u
+    |JOIN
+    |  user2 OVER (WINDOW '9' SECONDS, SLIDE '6' SECONDS) AS v
         |ON u.id = v.id
         |WHERE u.id > 1 and u.id < 3 and v.id > 1 and v.id < 3
       """.stripMargin)
+```
 
 Note: For time-based windowing join, the window size and sliding size should be same for all the joined streams. This is the limitation of Spark Streaming.
 
 ###External Source API Support for Kafka
 
-    streamSqlContext.command(
-      """
-        |CREATE TEMPORARY TABLE t_kafka (
-        |  word string
-        |)
-        |USING org.apache.spark.sql.streaming.sources.KafkaSource
-        |OPTIONS(
-        |  zkQuorum "localhost:2181",
-        |  groupId  "test",
-        |  topics   "aa:1",
-        |  messageToRow "org.apache.spark.sql.streaming.examples.MessageDelimiter")
-      """.stripMargin)
+```scala
+streamSqlContext.command(
+  """
+    |CREATE TEMPORARY TABLE t_kafka (
+    |  word string
+    |)
+    |USING org.apache.spark.sql.streaming.sources.KafkaSource
+    |OPTIONS(
+    |  zkQuorum "localhost:2181",
+    |  groupId  "test",
+    |  topics   "aa:1",
+    |  messageToRow "org.apache.spark.sql.streaming.examples.MessageDelimiter")
+  """.stripMargin)
+```
 
 ###How to Build and Deploy
 
@@ -105,7 +115,8 @@ To use Spark-CEP, put the packaged jar into your environment where Spark could a
 
 ####Spark-CEP job submission sample
 
-    {$SPARK_HOME}/bin/spark-submit \
+```bash
+{$SPARK_HOME}/bin/spark-submit \
      --class StreamHQL \
      --name "CQLDemo" \
      --master yarn-cluster \
@@ -125,6 +136,7 @@ To use Spark-CEP, put the packaged jar into your environment where Spark could a
     }" \
     sample_query \
     SELECT COUNT(DISTINCT t.duid) FROM stream_test OVER (WINDOW '300' SECONDS, SLIDE '5' SECONDS) AS t
+```
 
 There are few arguments being passed to the Spark-CEP job.
 First, it requires zookeeper url(`kafka.zookeeper.quorum`) for consuming stream from Kafka.
