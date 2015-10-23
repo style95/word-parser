@@ -32,7 +32,7 @@ val streamSqlContext = new StreamSQLContext(ssc, hiveContext)
 case class Person(name: String, age: String)
 
 // Create an DStream of Person objects and register it as a stream.
-val people: DStream[Person] = ssc.socketTe(serverIP, serverPort)
+val people: DStream[Person] = ssc.socketTextStream(serverIP, serverPort)
   .map(_.split(","))
   .map(p => Person(p(0), p(1).toInt))
     
