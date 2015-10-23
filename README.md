@@ -108,7 +108,7 @@ streamSqlContext.command(
 
 Spark-CEP is built with sbt, you could use sbt related commands to test/compile/package.
 
-Spark-CEP is built on >= Spark-1.3, you could change the Spark version in Build.scala to the version you wanted, currently Spark-CEP can be worked with Spark version 1.3+.
+Spark-CEP is built on >= Spark-1.5, you could change the Spark version in Build.scala to the version you wanted, currently Spark-CEP can be worked with Spark version 1.5+.
 
 To use Spark-CEP, put the packaged jar into your environment where Spark could access, you could use spark-submit --jars or other ways.
 
