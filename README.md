@@ -145,5 +145,5 @@ You can pass continuous query against a Kafka topic(`stream_test`).
 
 If you want to contribute our project, please refer to [Governance](https://github.com/samsung/spark-cep/wiki/Governance)
 ___
-Contact: [Robert B. Kim](byungjin.kim@samsung.com) [Junseok Heo](jun.seok.heo@samsung.com)
+Contact: [Robert B. Kim](byungjin.kim@samsung.com), [Junseok Heo](jun.seok.heo@samsung.com)
 ___
