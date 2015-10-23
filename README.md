@@ -91,17 +91,19 @@ Note: For time-based windowing join, the sliding size should be same for all the
 
 ```scala
 streamSqlContext.command(
-  """
-    |CREATE TEMPORARY TABLE t_kafka (
-    |  word string
-    |)
-    |USING org.apache.spark.sql.streaming.sources.KafkaSource
-    |OPTIONS(
-    |  zkQuorum "localhost:2181",
-    |  groupId  "test",
-    |  topics   "aa:1",
-    |  messageToRow "org.apache.spark.sql.streaming.examples.MessageDelimiter")
-  """.stripMargin)
+      s"""
+         |CREATE TEMPORARY TABLE t_kafka (
+         |word string
+         |,num int
+         |)
+         |USING org.apache.spark.sql.streaming.sources.KafkaSource
+         |OPTIONS(
+         |zkQuorum "10.10.10.1:2181",
+         |brokerList "10.10.10.1:9092,10.10.10.2:9092",
+         |groupId  "test",
+         |topics   "aa:10",
+         |messageToRow "org.apache.spark.sql.streaming.sources.MessageDelimiter")
+      """.stripMargin)
 ```
 
 ###How to Build and Deploy
@@ -125,7 +127,7 @@ To use Spark CEP, put the packaged jar into your environment where Spark could a
      --executor-memory 512m \
      --executor-cores 1 \
      --conf spark.default.parallelism=5 \
-     lib/spark-streamsql-assembly-0.1.0-SNAPSHOT.jar \
+     lib/spark-cep-assembly-0.1.0-SNAPSHOT.jar \
      "{ \
     \"kafka.zookeeper.quorum\": \"10.10.10.1:2181\", \
     \"redis.shards\": \"shard1\",\
