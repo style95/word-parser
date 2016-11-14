@@ -5,7 +5,7 @@ Spark CEP is a stream processing engine for Apache Spark with built-in continuou
 In the absence of SQL-like query engine for streams and the lack of fundamental functionality in alternatives which is based on the conjunction of Spark Streaming and Spark SQL, needs for stream processing engine along proper supports to the stream come to the fore.
 
 
-##Quick Start
+##Quick Startt
 
 ###Creating StreamSQLContext
 
